@@ -7,12 +7,12 @@
     <style>
         * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: #fff; text-align: center; margin: 0; padding: 15px; }
-        .card { background: #1e293b; max-width: 450px; margin: auto; padding: 20px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 2px solid #38bdf8; position: relative; }
-        h1 { color: #38bdf8; font-size: 22px; margin-bottom: 10px; }
+        .card { background: #1e293b; max-width: 500px; margin: auto; padding: 20px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 2px solid #38bdf8; position: relative; }
+        h1 { color: #38bdf8; font-size: 22px; margin-bottom: 5px; }
         .stats { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 15px; background: #334155; padding: 10px 15px; border-radius: 8px; }
         .question { font-size: 36px; font-weight: bold; margin: 20px 0; color: #facc15; }
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        button { background: #0284c7; color: white; border: none; padding: 14px; font-size: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; transition: 0.2s; }
+        button { background: #0284c7; color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 10px; cursor: pointer; transition: 0.2s; }
         button:active { transform: scale(0.95); background: #0369a1; }
         .start-btn { width: 100%; background: #22c55e; font-size: 18px; margin-top: 10px; }
         .admin-btn { background: #475569; font-size: 12px; padding: 6px 12px; border-radius: 6px; margin-top: 15px; }
@@ -22,20 +22,26 @@
         input, select { width: 100%; padding: 12px; margin: 8px 0 15px 0; border-radius: 8px; border: 1px solid #38bdf8; background: #0f172a; color: #fff; font-size: 16px; }
         label { font-weight: bold; font-size: 14px; text-align: left; display: block; color: #cbd5e1; }
 
+        /* Tab Buttons */
+        .tab-container { display: flex; gap: 5px; margin-bottom: 10px; }
+        .tab-btn { flex: 1; padding: 8px; font-size: 13px; background: #334155; border: 1px solid #475569; border-radius: 6px 6px 0 0; }
+        .tab-btn.active { background: #0284c7; border-color: #38bdf8; color: white; }
+
         /* Admin Dashboard & Table */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; color: #fff; font-size: 14px; }
-        th, td { border: 1px solid #334155; padding: 8px; text-align: center; }
-        th { background-color: #0284c7; color: white; }
+        .table-wrapper { max-height: 250px; overflow-y: auto; border: 1px solid #334155; border-radius: 8px; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; color: #fff; font-size: 13px; }
+        th, td { border: 1px solid #334155; padding: 8px 5px; text-align: center; }
+        th { background-color: #0284c7; color: white; position: sticky; top: 0; }
         tr:nth-child(even) { background-color: #1e293b; }
         tr:nth-child(odd) { background-color: #0f172a; }
-        .top-scorer { background-color: #15803d !important; font-weight: bold; }
+        .top-3 { background-color: #15803d !important; font-weight: bold; color: #facc15; }
     </style>
 </head>
 <body>
 
 <div class="card">
     <h1>🚀 Misi Matematik Tahap 2</h1>
-    <p style="font-size: 14px; color: #94a3b8;">Operasi + & - (Lingkungan 100)</p>
+    <p style="font-size: 13px; color: #94a3b8; margin-top:0;">Tambah & Tolak (Lingkungan 100)</p>
 
     <!-- BORANG PENDAFTARAN MURID -->
     <div id="register-screen">
@@ -55,7 +61,7 @@
         </p>
 
         <button class="start-btn" onclick="validateAndStart()">MULA MISI</button>
-        <button class="admin-btn" onclick="showAdminScreen()">🔒 Panel Admin / Guru</button>
+        <button class="admin-btn" onclick="checkAdminPassword()">🔒 Mod Admin / Guru</button>
     </div>
 
     <!-- SKRIN PERMAINAN -->
@@ -75,38 +81,69 @@
         <p>Jumlah Markah Anda:</p>
         <h1 id="final-score" style="font-size: 48px; color: #4ade80; margin: 10px 0;">0</h1>
         <button class="start-btn" onclick="showRegisterScreen()">Pemain Baharu / Cuba Lagi</button>
-        <button class="admin-btn" onclick="showAdminScreen()">🔒 Lihat Kedudukan (Admin)</button>
     </div>
 
     <!-- PANEL ADMIN / DASHBOARD GURU -->
     <div id="admin-screen" class="hidden">
-        <h2 style="color: #facc15; margin-bottom: 5px;">📊 Rekod Penyertaan</h2>
-        <p style="font-size: 12px; color: #94a3b8; margin-top: 0;">Disusun mengikut Markah Tertinggi</p>
+        <h2 style="color: #facc15; margin-bottom: 2px;">📊 Panel Pengurusan Admin</h2>
+        <p style="font-size: 12px; color: #94a3b8; margin-top: 0;">Panduan & Rekod Penyertaan Guru</p>
         
-        <div style="max-height: 250px; overflow-y: auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Nama</th>
-                        <th>Tahun</th>
-                        <th>Markah</th>
-                    </tr>
-                </thead>
-                <tbody id="leaderboard-body">
-                    <!-- Data pemain akan dimasukkan di sini -->
-                </tbody>
-            </table>
+        <!-- Tab Navigasi -->
+        <div class="tab-container">
+            <button class="tab-btn active" id="tab1" onclick="switchTab('top10')">🏆 Top 10 (Hadiah)</button>
+            <button class="tab-btn" id="tab2" onclick="switchTab('sheet')">📄 Semua Rekod (Sheet)</button>
         </div>
 
-        <button class="start-btn" style="background:#0284c7; margin-top:15px;" onclick="showRegisterScreen()">Kembali ke Permainan</button>
-        <button class="admin-btn" style="background:#ef4444;" onclick="clearData()">Padam Semua Data</button>
+        <!-- TAB 1: TOP 10 MENGIKUT TAHUN -->
+        <div id="view-top10">
+            <div style="display:flex; gap:5px; margin-bottom:8px;">
+                <button style="flex:1; padding:5px; font-size:12px;" onclick="renderTop10('Tahun 4')">Tahun 4</button>
+                <button style="flex:1; padding:5px; font-size:12px;" onclick="renderTop10('Tahun 5')">Tahun 5</button>
+                <button style="flex:1; padding:5px; font-size:12px;" onclick="renderTop10('Tahun 6')">Tahun 6</button>
+            </div>
+            <h4 id="top10-title" style="margin:5px 0; color:#38bdf8;">Senarai Top 10 Tahun 4</h4>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ked.</th>
+                            <th>Nama Murid</th>
+                            <th>Markah</th>
+                        </tr>
+                    </thead>
+                    <tbody id="top10-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 2: SHEET SEMUA REKOD -->
+        <div id="view-sheet" class="hidden">
+            <h4 style="margin:5px 0; color:#38bdf8;">Semua Rekod Percubaan</h4>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Tahun</th>
+                            <th>Markah</th>
+                            <th>Masa Jawab</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sheet-body"></tbody>
+                </table>
+            </div>
+            <button style="background:#10b981; width:100%; margin-top:10px; font-size:14px;" onclick="exportToCSV()">📥 Muat Turun Data (Excel / CSV)</button>
+        </div>
+
+        <button class="start-btn" style="background:#0284c7; margin-top:15px;" onclick="showRegisterScreen()">Kembali ke Utama</button>
+        <button class="admin-btn" style="background:#ef4444;" onclick="clearData()">Padam Semua Rekod</button>
     </div>
 </div>
 
 <script>
     let score = 0, timeLeft = 60, timerInterval, currentAnswer = 0;
     let currentPlayer = { name: "", classYear: "" };
+    const ADMIN_PASS = "1234"; // Kata Laluan Admin
 
     function validateAndStart() {
         const nameInput = document.getElementById('studentName').value.trim();
@@ -193,14 +230,25 @@
         document.getElementById('final-score').innerText = score;
         document.getElementById('displayPlayerName').innerText = currentPlayer.name;
 
-        // Simpan rekod ke LocalStorage
         saveScore(currentPlayer.name, currentPlayer.classYear, score);
     }
 
     function saveScore(name, classYear, score) {
         let records = JSON.parse(localStorage.getItem('mathGameRecords')) || [];
-        records.push({ name: name, classYear: classYear, score: score, time: new Date().toLocaleTimeString() });
+        let dateObj = new Date();
+        let timeFormatted = dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        
+        records.push({ name: name, classYear: classYear, score: score, time: timeFormatted });
         localStorage.setItem('mathGameRecords', JSON.stringify(records));
+    }
+
+    function checkAdminPassword() {
+        let pwd = prompt("Masukkan kata laluan Admin / Guru:");
+        if (pwd === ADMIN_PASS) {
+            showAdminScreen();
+        } else if (pwd !== null) {
+            alert("Kata laluan salah!");
+        }
     }
 
     function showAdminScreen() {
@@ -209,29 +257,97 @@
         document.getElementById('end-screen').classList.add('hidden');
         document.getElementById('admin-screen').classList.remove('hidden');
 
-        let records = JSON.parse(localStorage.getItem('mathGameRecords')) || [];
-        // Susun mengikut markah tertinggi
-        records.sort((a, b) => b.score - a.score);
+        renderTop10('Tahun 4');
+        renderSheet();
+    }
 
-        let tbody = document.getElementById('leaderboard-body');
+    function switchTab(tab) {
+        document.getElementById('tab1').classList.remove('active');
+        document.getElementById('tab2').classList.remove('active');
+        document.getElementById('view-top10').classList.add('hidden');
+        document.getElementById('view-sheet').classList.add('hidden');
+
+        if (tab === 'top10') {
+            document.getElementById('tab1').classList.add('active');
+            document.getElementById('view-top10').classList.remove('hidden');
+        } else {
+            document.getElementById('tab2').classList.add('active');
+            document.getElementById('view-sheet').classList.remove('hidden');
+        }
+    }
+
+    function renderTop10(year) {
+        document.getElementById('top10-title').innerText = `Senarai Top 10 (${year})`;
+        let records = JSON.parse(localStorage.getItem('mathGameRecords')) || [];
+        
+        // Tapis mengikut tahun dan susun markah tertinggi
+        let filtered = records.filter(r => r.classYear === year);
+        filtered.sort((a, b) => b.score - a.score);
+
+        // Ambil Top 10 sahaja
+        let top10 = filtered.slice(0, 10);
+
+        let tbody = document.getElementById('top10-body');
         tbody.innerHTML = '';
 
-        if (records.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4">Tiada rekod penyertaan lagi.</td></tr>';
+        if (top10.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3">Tiada rekod bagi tahun ini.</td></tr>';
             return;
         }
 
-        records.forEach((rec, index) => {
+        top10.forEach((rec, index) => {
             let tr = document.createElement('tr');
-            if (index === 0) tr.classList.add('top-scorer'); // Highlight Tempat Pertama
+            if (index < 3) tr.classList.add('top-3'); // Highlight Top 3
             tr.innerHTML = `
                 <td>${index + 1}</td>
                 <td>${rec.name}</td>
-                <td>${rec.classYear}</td>
                 <td><b>${rec.score}</b></td>
             `;
             tbody.appendChild(tr);
         });
+    }
+
+    function renderSheet() {
+        let records = JSON.parse(localStorage.getItem('mathGameRecords')) || [];
+        let tbody = document.getElementById('sheet-body');
+        tbody.innerHTML = '';
+
+        if (records.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4">Tiada rekod penyertaan.</td></tr>';
+            return;
+        }
+
+        records.forEach(rec => {
+            let tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${rec.name}</td>
+                <td>${rec.classYear}</td>
+                <td><b>${rec.score}</b></td>
+                <td>${rec.time}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function exportToCSV() {
+        let records = JSON.parse(localStorage.getItem('mathGameRecords')) || [];
+        if (records.length === 0) {
+            alert("Tiada data untuk dimuat turun!");
+            return;
+        }
+
+        let csvContent = "data:text/csv;charset=utf-8,Nama,Tahun,Markah,Tarikh Masa\n";
+        records.forEach(r => {
+            csvContent += `"${r.name}","${r.classYear}",${r.score},"${r.time}"\n`;
+        });
+
+        let encodedUri = encodeURI(csvContent);
+        let link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "rekod_misi_matematik.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
     function showRegisterScreen() {
@@ -242,7 +358,7 @@
     }
 
     function clearData() {
-        if (confirm("Adakah anda pasti untuk memadam semua data penyertaan murid?")) {
+        if (confirm("Adakah anda pasti untuk memadam SEMUA rekod penyertaan murid?")) {
             localStorage.removeItem('mathGameRecords');
             showAdminScreen();
         }
